@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String    @id @unique @default(cuid()) @map("id")
+  loginAt   DateTime  @default(now()) @map("login_at")
+  expiredAt DateTime  @map("expired_at")
+  revokedAt DateTime? @map("revoked_at")
+  ipAddress String?   @map("ip_address")
+  userAgent String?   @map("user_agent")
+
+  User   User?   @relation(fields: [idUser], references: [id])
+  idUser String? @map("id_user")
+
+  Client   Client? @relation(fields: [idClient], references: [id])
+  idClient String? @map("id_client")
+
+  @@map("sessions")
+}
+
+model User {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+  name      String    @map("name")
+  email     String    @unique @map("email")
+  password  String    @map("password")
+  avatarUrl String?   @map("avatar_url")
+
+  Products   Product[]
+  Categories Category[]
+  Sessions   Session[]
+
+  Role       UserRole @relation(fields: [idUserRole], references: [id])
+  idUserRole String   @map("id_user_role")
+
+  @@map("users")
+}
+
+model UserRole {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+  name      String    @map("name")
+
+  Users        User[]
+  MapPageRoles MapPageRole[]
+
+  @@map("user_roles")
+}
+
+model MapPageRole {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+
+  UserRole   UserRole @relation(fields: [idUserRole], references: [id])
+  idUserRole String   @map("id_user_role")
+
+  Page   Page   @relation(fields: [idPage], references: [id])
+  idPage String @map("id_page")
+
+  PageAction   PageAction @relation(fields: [idPageAction], references: [id])
+  idPageAction String     @map("id_page_action")
+
+  @@map("map_page_roles")
+}
+
+model Page {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+  path      String    @unique @map("path")
+
+  Actions      PageAction[]
+  MapPageRoles MapPageRole[]
+
+  @@map("pages")
+}
+
+model PageAction {
+  id          String    @id @unique @default(cuid()) @map("id")
+  code        String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  disabled    Boolean   @default(false) @map("disabled")
+  name        String    @map("name")
+  description String?   @map("description")
+  type        String    @map("type") // e.g., "view", "edit", "delete"
+
+  MapPageRoles MapPageRole[]
+
+  Page   Page   @relation(fields: [idPage], references: [id])
+  idPage String @map("id_page")
+
+  @@map("page_actions")
+}
+
+model Client {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+  name      String    @map("name")
+  email     String    @unique @map("email")
+  password  String    @map("password")
+  avatarUrl String?   @map("avatar_url")
+
+  Sessions Session[]
+
+  @@map("clients")
+}
+
+model Category {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+
+  UserIns   User?   @relation(fields: [idUserIns], references: [id])
+  idUserIns String? @map("id_user_ins")
+
+  @@map("categories")
+}
+
+model Product {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+
+  UserIns   User?   @relation(fields: [idUserIns], references: [id])
+  idUserIns String? @map("id_user_ins")
+
+  @@map("products")
+}

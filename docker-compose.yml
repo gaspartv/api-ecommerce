@@ -1,0 +1,15 @@
+services:
+  postgresql:
+    container_name: dev_ecommerce_postgresql
+    image: bitnami/postgresql:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ecommerce_user
+      POSTGRES_PASSWORD: qwerty123
+      POSTGRES_DB: dev_ecommerce
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
