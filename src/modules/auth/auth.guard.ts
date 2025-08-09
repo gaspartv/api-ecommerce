@@ -3,6 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
 import { FastifyRequest } from "fastify";
 import { IS_PUBLIC_KEY } from "src/common/decorators/is-public.decorator";
+import { ErrorMessage } from "src/common/messages/errors.message";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {
@@ -42,7 +43,7 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
         throw new UnauthorizedException(error.message);
       }
 
-      throw new UnauthorizedException("JWT token is invalid");
+      throw new UnauthorizedException(ErrorMessage["AEC-0002"]);
     });
   }
 }

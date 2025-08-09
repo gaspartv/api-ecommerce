@@ -33,7 +33,7 @@ export class SessionEntity {
     if (session) this.fill(session);
   }
 
-  fill(session: SessionDto) {
+  fill(session: SessionDto): void {
     this._id = session.id;
     this._loginAt = session.loginAt;
     this._expiredAt = session.expiredAt;
@@ -44,7 +44,7 @@ export class SessionEntity {
     this._idClient = session.idClient ?? null;
   }
 
-  create(session: SessionCreateDto) {
+  create(session: SessionCreateDto): void {
     this._id = cuid();
     this._loginAt = new Date();
     this._expiredAt = new Date(new Date().getTime() + Number(env.JWT_EXPIRES_IN_TIME));
@@ -55,7 +55,7 @@ export class SessionEntity {
     this._idClient = session.idClient ?? null;
   }
 
-  revoke() {
+  revoke(): void {
     this._revokedAt = new Date();
   }
 
