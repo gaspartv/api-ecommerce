@@ -31,7 +31,7 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy, "jwt") {
     const session = await this.prismaService.session.findUnique({ where: { id: ses } });
     if (!session || session.revokedAt) throw new UnauthorizedException(ErrorMessage["AEC-0003"]);
 
-    request.infoUser = { id: sub };
+    request.infoUser = { id: sub, is };
 
     return true;
   }

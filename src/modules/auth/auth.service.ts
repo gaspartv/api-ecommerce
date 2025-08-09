@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { ErrorMessage } from "src/common/messages/errors.message";
@@ -65,5 +65,43 @@ export class AuthService {
       where: { idUser },
       data: { revokedAt: new Date() },
     });
+  }
+
+  async clientProfile(id: string) {
+    const clientFound = await this.prismaService.client.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+        disabled: false,
+      },
+      select: {
+        id: true,
+        code: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+      },
+    });
+    if (!clientFound) throw new NotFoundException(ErrorMessage["AEC-0004"]);
+    return clientFound;
+  }
+
+  async userProfile(id: string) {
+    const userFound = await this.prismaService.user.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+        disabled: false,
+      },
+      select: {
+        id: true,
+        code: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+      },
+    });
+    if (!userFound) throw new NotFoundException(ErrorMessage["AEC-0004"]);
+    return userFound;
   }
 }

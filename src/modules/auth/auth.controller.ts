@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { IsPublic } from "src/common/decorators/is-public.decorator";
 import { RequestInfoDto } from "src/common/dtos/request.info.dto";
 import { UsersSignInDto } from "src/common/dtos/user.sign-in.dto";
@@ -22,5 +22,14 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   signOut(@CurrentUserRequest() userSignIn: UsersSignInDto) {
     return this.authService.signOut(userSignIn.id);
+  }
+
+  @Get("profile")
+  @HttpCode(HttpStatus.OK)
+  profile(@CurrentUserRequest() userSignIn: UsersSignInDto) {
+    if (userSignIn.is === "client") {
+      return this.authService.clientProfile(userSignIn.id);
+    }
+    return this.authService.userProfile(userSignIn.id);
   }
 }
