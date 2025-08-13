@@ -7,7 +7,7 @@ import { CurrentUserRequest } from "src/common/requests/current-user.request";
 import { AuthService } from "./auth.service";
 import { AuthSignInDto } from "./dtos/auth.sign-in.dto";
 
-@Controller("auth")
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

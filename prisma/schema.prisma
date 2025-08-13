@@ -8,6 +8,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Business {
+  id          String    @id @unique @default(cuid()) @map("id")
+  code        String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  disabled    Boolean   @default(false) @map("disabled")
+  name        String    @map("company_name") @db.VarChar(60)
+  permissions String[]  @map("permissions")
+
+  @@map("businesses")
+}
+
 model Session {
   id        String    @id @unique @default(cuid()) @map("id")
   loginAt   DateTime  @default(now()) @map("login_at")
@@ -41,8 +54,8 @@ model User {
   Categories Category[]
   Sessions   Session[]
 
-  Role       UserRole @relation(fields: [idUserRole], references: [id])
-  idUserRole String   @map("id_user_role")
+  Role       UserRole? @relation(fields: [idUserRole], references: [id])
+  idUserRole String?   @map("id_user_role")
 
   @@map("users")
 }
@@ -54,7 +67,7 @@ model UserRole {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
   disabled  Boolean   @default(false) @map("disabled")
-  name      String    @map("name")
+  name      String    @unique @map("name")
 
   Users        User[]
   MapPageRoles MapPageRole[]
@@ -76,8 +89,8 @@ model MapPageRole {
   Page   Page   @relation(fields: [idPage], references: [id])
   idPage String @map("id_page")
 
-  PageAction   PageAction @relation(fields: [idPageAction], references: [id])
-  idPageAction String     @map("id_page_action")
+  Routes  Route[]
+  Actions RouteAction[]
 
   @@map("map_page_roles")
 }
@@ -90,30 +103,39 @@ model Page {
   deletedAt DateTime? @map("deleted_at")
   disabled  Boolean   @default(false) @map("disabled")
   path      String    @unique @map("path")
+  public    Boolean   @default(false) @map("public")
 
-  Actions      PageAction[]
   MapPageRoles MapPageRole[]
 
   @@map("pages")
 }
 
-model PageAction {
-  id          String    @id @unique @default(cuid()) @map("id")
-  code        String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
-  disabled    Boolean   @default(false) @map("disabled")
-  name        String    @map("name")
-  description String?   @map("description")
-  type        String    @map("type") // e.g., "view", "edit", "delete"
+model Route {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+  path      String    @unique @map("path")
 
   MapPageRoles MapPageRole[]
 
-  Page   Page   @relation(fields: [idPage], references: [id])
-  idPage String @map("id_page")
+  @@map("routes")
+}
 
-  @@map("page_actions")
+model RouteAction {
+  id        String    @id @unique @default(cuid()) @map("id")
+  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  disabled  Boolean   @default(false) @map("disabled")
+  name      String    @map("name")
+
+  MapPageRoles MapPageRole[]
+
+  @@map("route_actions")
 }
 
 model Client {
@@ -134,15 +156,19 @@ model Client {
 }
 
 model Category {
-  id        String    @id @unique @default(cuid()) @map("id")
-  code      String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
-  disabled  Boolean   @default(false) @map("disabled")
+  id          String    @id @unique @default(cuid()) @map("id")
+  code        String    @unique @map("code") @db.VarChar(6) // CodeGeneratorUtil.execute()
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  disabled    Boolean   @default(false) @map("disabled")
+  name        String    @unique @map("name")
+  description String?   @map("description")
 
   UserIns   User?   @relation(fields: [idUserIns], references: [id])
   idUserIns String? @map("id_user_ins")
+
+  Products Product[]
 
   @@map("categories")
 }
@@ -157,6 +183,8 @@ model Product {
 
   UserIns   User?   @relation(fields: [idUserIns], references: [id])
   idUserIns String? @map("id_user_ins")
+
+  Categories Category[]
 
   @@map("products")
 }
