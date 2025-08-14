@@ -12,9 +12,18 @@ export class PermissionGuard implements CanActivate {
     const type = request.url.split("/")[3];
     if (!type) return true;
 
-    console.log("PermissionGuard", type);
-
     if (!request.infoUser) throw new BadRequestException(ErrorMessage["AEC-0006"]);
+
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        id: request.infoUser.id,
+        deletedAt: null,
+        disabled: false,
+      },
+      select: { isAdmin: true },
+    });
+    if (!user) throw new BadRequestException(ErrorMessage["AEC-0006"]);
+    if (user.isAdmin) return true;
 
     const frontPath = request.headers["x-frontend-path"];
     if (!frontPath || typeof frontPath !== "string") throw new BadRequestException(ErrorMessage["AEC-0006"]);

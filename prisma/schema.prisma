@@ -49,6 +49,7 @@ model User {
   email     String    @unique @map("email")
   password  String    @map("password")
   avatarUrl String?   @map("avatar_url")
+  isAdmin   Boolean   @default(false) @map("is_admin")
 
   Products   Product[]
   Categories Category[]

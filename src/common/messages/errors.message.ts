@@ -6,4 +6,10 @@ export const ErrorMessage = {
   "AEC-0005": "AEC-0005: Categoria já existe.",
   "AEC-0006": "AEC-0006: Sem permissão.",
   "AEC-0007": "AEC-0007: Permissão já cadastrada.",
+  "AEC-0008": "AEC-0008: Página já existe.",
+  "AEC-0009": "AEC-0009: Página não encontrada.",
+  "AEC-0010": "AEC-0010: Rota já existe.",
+  "AEC-0011": "AEC-0011: Rota não encontrada.",
+  "AEC-0012": "AEC-0012: Ação de rota já existe.",
+  "AEC-0013": "AEC-0013: Ação de rota não encontrada.",
 };
