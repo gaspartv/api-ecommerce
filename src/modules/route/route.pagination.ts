@@ -1,4 +1,4 @@
-import { Prisma } from "generated/prisma";
+import { Prisma } from "@prisma/client";
 import { PaginationUtil } from "src/common/pagination/pagination.util";
 import { RoutePaginationDto } from "./dtos/route.pagination.dto";
 
