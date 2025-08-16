@@ -4,6 +4,7 @@ import { PermissionGuard } from "./common/guards/permission.guard";
 import { JwtAuthGuard } from "./modules/auth/auth.guard";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CategoryModule } from "./modules/category/category.module";
+import { LogModule } from "./modules/log/log.module";
 import { PageModule } from "./modules/page/page.module";
 import { RouteActionModule } from "./modules/route-action/route-action.module";
 import { RouteModule } from "./modules/route/route.module";
@@ -15,6 +16,7 @@ import { PrismaModule } from "./providers/prisma/prisma.module";
   imports: [
     AuthModule,
     CategoryModule,
+    LogModule,
     PageModule,
     PrismaModule,
     RouteActionModule,

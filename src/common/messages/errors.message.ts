@@ -12,4 +12,5 @@ export const ErrorMessage = {
   "AEC-0011": "AEC-0011: Rota não encontrada.",
   "AEC-0012": "AEC-0012: Ação de rota já existe.",
   "AEC-0013": "AEC-0013: Ação de rota não encontrada.",
+  "AEC-0014": "AEC-0014: Log não encontrado.",
 };
